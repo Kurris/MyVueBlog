@@ -4,12 +4,12 @@ import VueRouter from 'vue-router'
 vue.use(VueRouter)
 
 const introduction = () => import('../components/content/profile/introduction.vue')
-const blogs = () => import('../components/content/blog/blogs.vue')
+const blog = () => import('../components/content/blog/blog.vue')
 
 const routes = [
 	{
 		path: '',
-		redirect: '/Blogs',
+		redirect: '/Blog',
 	},
 	{
 		path: '/Introduction',
@@ -19,8 +19,8 @@ const routes = [
 		},
 	},
 	{
-		path: '/Blogs',
-		component: blogs,
+		path: '/Blog',
+		component: blog,
 		meta: {
 			title: '博客浏览',
 		},

@@ -1,44 +1,40 @@
 <template>
-	<div id="app">
-		<Header />
-		<!-- <Profile /> -->
-		<!-- <router-view /> -->
-
-		<div id="content">asdsadsa</div>
-		<Footer />
-	</div>
+  <div id="app">
+    <Header />
+    <Profile />
+    <div id="content">
+      <router-view />
+    </div>
+    <Footer />
+  </div>
 </template>
 
 <script>
 import Header from './components/common/header'
 import Footer from './components/common/footer'
 import Profile from './views/profile'
+
 import router from './router/index'
 
 export default {
-	router,
-	name: 'App',
-	components: {
-		Header,
-		Profile,
-		Footer,
-	},
+  router,
+  name: 'App',
+  components: {
+    Header,
+    Profile,
+    Footer,
+  },
 }
 </script>
 
 <style>
-@import './assets/css/base.css';
-
-#app {
-	text-align: center;
-}
+@import "./assets/css/base.css";
 
 #content {
-	text-align: center;
-	position: fixed;
-	top: 15%;
-	left: 25%;
-	right: 25%;
-	background-color: red;
+  position: absolute;
+  width: 950px;
+  height: 765px;
+  top: 155px;
+  margin-left: 400px;
 }
 </style>
