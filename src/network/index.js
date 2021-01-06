@@ -44,13 +44,11 @@ export default function http(config) {
 		},
 		err => {
 			loading.close()
-			console.log(2222)
-			console.log(err)
+
 			Message({
-				//elemen组件库中的提示组件
-				message: '后台错误',
+				message: err,
 				type: 'error',
-				duration: 5000,
+				duration: 3000,
 			})
 			return
 		}
