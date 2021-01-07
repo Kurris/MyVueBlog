@@ -2,24 +2,19 @@ import axios from 'axios'
 import { Loading, Message } from 'element-ui'
 
 const loading = {
-	//loading加载对象
 	loadingInstance: null,
-	//打开加载
 	open() {
 		if (this.loadingInstance === null) {
-			// 如果实例 为空，则创建
 			this.loadingInstance = Loading.service({
-				text: '加载中...', //加载图标下的文字
-				spinner: 'el-icon-loading', //加载图标
-				background: 'rgba(0, 0, 0, 0.8)', //背景色
-				customClass: 'loading', //自定义样式的类名
+				text: '加载中...',
+				spinner: 'el-icon-loading',
+				background: 'rgba(0, 0, 0, 0.1)',
+				customClass: 'loading',
 			})
 		}
 	},
-	//关闭加载
 	close() {
-		// 不为空时, 则关闭加载窗口
-		if (this.loadingInstance !== null) {
+		if (this.loadingInstance != null) {
 			this.loadingInstance.close()
 		}
 		this.loadingInstance = null
@@ -40,17 +35,24 @@ export default function http(config) {
 	instance.interceptors.response.use(
 		res => {
 			loading.close()
-			return res.data
+			if (res.data.Status > 1001) {
+				Message({
+					message: res.data.Message,
+					type: 'error',
+					duration: 5000,
+				})
+			} else {
+				return res.data
+			}
 		},
 		err => {
 			loading.close()
-
+			let msg = err.message == 'Network Error' ? '无法连接网络' : err.message
 			Message({
-				message: err,
+				message: msg,
 				type: 'error',
-				duration: 3000,
+				duration: 5000,
 			})
-			return
 		}
 	)
 

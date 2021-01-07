@@ -1,10 +1,13 @@
 <template>
   <div id="profile">
-    <el-avatar :size="100" :src="profile.avator"></el-avatar>
-    <div>
-      <p class="">{{ profile.name }}</p>
-      <p class="">{{ profile.phone }}</p>
-      <a :href="profile.githubUrl" target="_blank">Github</a>
+    <el-avatar :size="100" :src="profile.avatarUrl"></el-avatar>
+
+    <div class="info" style="text-align: left">
+      <p class="name" style="font-size: 20px; font-weight: bold"> {{ profile.name }}</p>
+
+      <p class="separated">phone: {{ profile.phone }}</p>
+      Github:
+      <el-link class="separated" :href="profile.githubUrl" target="_blank" type="primary">{{ profile.githubUrl }}</el-link>
     </div>
   </div>
 </template>
@@ -13,9 +16,7 @@
 export default {
   data() {
     return {
-      aaaa: '2222',
       profile: {},
-      avatorImg: ''
     }
   },
   created() {
@@ -28,13 +29,17 @@ export default {
       }
     }).then(res => {
       if (res.status == 1000) {
-        this.$http({
-          url: '/Profile/GetProfile?name=ligy'
-        }).then((result) => {
-          this.profile = result.data;
-        })
+        return this.$http({
+          url: '/Profile/GetProfile',
+          params: {
+            name: 'ligy'
+          }
+        });
       }
-    })
+    }).then(res => {
+      console.log(res);
+      this.profile = res.data;
+    });
   },
 }
 </script>
@@ -42,10 +47,23 @@ export default {
 <style>
 #profile {
   position: absolute;
-  background-color: rgb(238, 238, 221);
+  background-color: rgb(238, 241, 228);
   left: 20px;
   top: 155px;
   height: 765px;
   width: 350px;
+  box-shadow: 0 0 20px -2px rgb(214, 230, 161);
+}
+.separated {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.name {
+  margin-bottom: 20px;
+}
+
+.info {
+  margin-top: 40px;
 }
 </style>
