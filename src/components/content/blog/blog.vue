@@ -1,25 +1,23 @@
 <template>
   <div class="blog">
-    <div v-if="blogDatas.length==0">
-      <h1>没有数据</h1>
-    </div>
-    <div v-else>
-      <h1>有数据</h1>
-    </div>
-
-    <el-pagination
-      class="pagination"
-      @current-change="changePage"
-      :page-size="pageSize"
-      :current-page.sync="currentPage"
-      layout="total, prev, pager, next"
-      :total="total"
-    > </el-pagination>
+    <el-timeline class="timeline">
+      <el-timeline-item timestamp="2018/4/12" placement="top">
+        <el-card>
+          <el-link href="https://element.eleme.io" target="_blank">title</el-link>
+          <p>content</p>
+        </el-card>
+      </el-timeline-item>
+    </el-timeline>
+    <detail />
+    <el-pagination class="pagination" @current-change="changePage" :page-size="pageSize" :current-page.sync="currentPage" layout="total, prev, pager, next" :total="total"> </el-pagination>
 
   </div>
 </template>
 
 <script>
+
+import detail from './blogDetail'
+
 export default {
   data() {
     return {
@@ -33,6 +31,9 @@ export default {
       ]
     }
   },
+  components: {
+    detail
+  },
   methods: {
     changePage(page) {
       alert(page);
@@ -45,11 +46,18 @@ export default {
 <style>
 .blog {
   height: 100%;
+  text-align: left;
 }
 
 .pagination {
   position: absolute;
   bottom: 0px;
   left: 20%;
+}
+
+.timeline p,
+h4 {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 </style>

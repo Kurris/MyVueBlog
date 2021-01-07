@@ -56,5 +56,10 @@ export default function http(config) {
 		}
 	)
 
+	let token = window.localStorage.getItem('user_access_token')
+	config.headers = {
+		user_access_token: token,
+	}
+
 	return instance(config)
 }

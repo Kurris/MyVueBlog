@@ -6,6 +6,7 @@
       <p class="name" style="font-size: 20px; font-weight: bold"> {{ profile.name }}</p>
 
       <p class="separated">phone: {{ profile.phone }}</p>
+      <p class="separated">email: {{ profile.email }}</p>
       Github:
       <el-link class="separated" :href="profile.githubUrl" target="_blank" type="primary">{{ profile.githubUrl }}</el-link>
     </div>
@@ -29,6 +30,8 @@ export default {
       }
     }).then(res => {
       if (res.status == 1000) {
+        window.localStorage.setItem("user_access_token", res.data.token);
+
         return this.$http({
           url: '/Profile/GetProfile',
           params: {
@@ -37,7 +40,6 @@ export default {
         });
       }
     }).then(res => {
-      console.log(res);
       this.profile = res.data;
     });
   },
