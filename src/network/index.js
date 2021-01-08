@@ -6,9 +6,9 @@ const loading = {
 	open() {
 		if (this.loadingInstance === null) {
 			this.loadingInstance = Loading.service({
-				text: '加载中...',
+				text: '等待中...',
 				spinner: 'el-icon-loading',
-				background: 'rgba(0, 0, 0, 0.1)',
+				background: 'rgba(0, 0, 0, 0.01)',
 				customClass: 'loading',
 			})
 		}
@@ -35,9 +35,9 @@ export default function http(config) {
 	instance.interceptors.response.use(
 		res => {
 			loading.close()
-			if (res.data.Status > 1001) {
+			if (res.data.status > 1001) {
 				Message({
-					message: res.data.Message,
+					message: res.data.message,
 					type: 'error',
 					duration: 5000,
 				})

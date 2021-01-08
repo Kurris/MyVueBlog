@@ -30,11 +30,17 @@ export default {
 <style>
 @import "./assets/css/base.css";
 
+.elheader {
+  font-family: sans-serif;
+  margin-bottom: 30px;
+}
+
 #content {
   position: absolute;
   width: 950px;
   height: 765px;
   top: 155px;
   margin-left: 400px;
+  box-shadow: 0 0 20px -2px rgb(224, 241, 165);
 }
 </style>

@@ -1,5 +1,6 @@
 <template>
   <div id="blogDetail">
+    <el-page-header @back="goBack" content="博客浏览"></el-page-header>
     <markdown :source="mdContent"></markdown>>
   </div>
 </template>
@@ -21,7 +22,12 @@ export default {
   },
   components: {
     markdown
-  }
+  },
+  methods: {
+    goBack() {
+      this.$router.replace('/Blog')
+    }
+  },
 }
 </script>
 

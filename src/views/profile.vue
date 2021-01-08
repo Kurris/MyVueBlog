@@ -5,10 +5,10 @@
     <div class="info" style="text-align: left">
       <p class="name" style="font-size: 20px; font-weight: bold"> {{ profile.name }}</p>
 
-      <p class="separated">phone: {{ profile.phone }}</p>
-      <p class="separated">email: {{ profile.email }}</p>
+      <p v-if="profile.phone" class="separated">phone: {{ profile.phone }}</p>
+      <p v-if="profile.email!=''" class="separated">email: {{ profile.email }}</p>
       Github:
-      <el-link class="separated" :href="profile.githubUrl" target="_blank" type="primary">{{ profile.githubUrl }}</el-link>
+      <el-link v-if="profile.githubUrl!=''" class=" separated" :href="profile.githubUrl" target="_blank" type="primary">{{ profile.githubUrl }}</el-link>
     </div>
   </div>
 </template>
@@ -31,16 +31,30 @@ export default {
     }).then(res => {
       if (res.status == 1000) {
         window.localStorage.setItem("user_access_token", res.data.token);
+        this.$store.state.userName = res.data.userName;
 
         return this.$http({
           url: '/Profile/GetProfile',
           params: {
-            name: 'ligy'
+            name: res.data.userName
           }
         });
       }
     }).then(res => {
       this.profile = res.data;
+
+      return this.$http({
+        url: '/Blog/GetBlog',
+        params: {
+          userName: this.$store.state.userName
+        }
+      })
+
+    }).then(res => {
+      this.$store.state.blogId = res.data.blogId
+      console.log(this.$store.state.blogId);
+    }).catch(err => {
+      window.localStorage.setItem("user_access_token", '');
     });
   },
 }
@@ -50,6 +64,7 @@ export default {
 #profile {
   position: absolute;
   background-color: rgb(238, 241, 228);
+  text-align: center;
   left: 20px;
   top: 155px;
   height: 765px;

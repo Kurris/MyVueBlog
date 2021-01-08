@@ -5,6 +5,8 @@ vue.use(VueRouter)
 
 const introduction = () => import('../components/content/profile/introduction.vue')
 const blog = () => import('../components/content/blog/blog.vue')
+const blogDetail = () => import('../components/content/blog/blogDetail.vue')
+const blogEditor = () => import('../components/content/blog/blogEditor.vue')
 
 const routes = [
 	{
@@ -22,7 +24,21 @@ const routes = [
 		path: '/Blog',
 		component: blog,
 		meta: {
-			title: '博客浏览',
+			title: '博客',
+		},
+	},
+	{
+		path: '/BlogDetail',
+		component: blogDetail,
+		meta: {
+			title: '浏览中',
+		},
+	},
+	{
+		path: '/BlogEditor',
+		component: blogEditor,
+		meta: {
+			title: '编辑中',
 		},
 	},
 ]
