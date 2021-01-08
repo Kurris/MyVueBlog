@@ -49,10 +49,8 @@ export default {
           userName: this.$store.state.userName
         }
       })
-
     }).then(res => {
-      this.$store.state.blogId = res.data.blogId
-      console.log(this.$store.state.blogId);
+      this.$store.state.blog = res.data
     }).catch(err => {
       window.localStorage.setItem("user_access_token", '');
     });

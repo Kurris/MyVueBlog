@@ -31,8 +31,9 @@ export default {
 @import "./assets/css/base.css";
 
 .elheader {
-  font-family: sans-serif;
+  margin-top: 10px;
   margin-bottom: 30px;
+  margin-left: 15px;
 }
 
 #content {

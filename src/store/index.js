@@ -6,7 +6,7 @@ vue.use(vuex)
 const store = new vuex.Store({
 	state: {
 		userName: '',
-		blogId: 0,
+		blog: {},
 	},
 	mutations: {},
 	actions: {},

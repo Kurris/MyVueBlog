@@ -1,27 +1,28 @@
 <template>
   <div class="blog">
-    <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <span>博客</span>
-        <el-button style="float: right; padding: 3px " @click="refresh">刷新</el-button>
-        <el-button style="float: right; padding: 3px " @click="addBlog">新增</el-button>
+    <div class="blogHeader">
+      <span>博客</span>
+      <div class="headerbtn">
+        <el-button @click="refresh">刷新</el-button>
+        <el-button @click="addBlog">新增</el-button>
       </div>
-    </el-card>
-    <el-timeline class="timeline" v-for="item in posts" :key="item.postId">
+    </div>
+
+    <el-timeline class="timeline" v-for="(item,index) in posts" :key="item.postId">
       <el-timeline-item :id="item.postId" :timestamp="item.createTime" placement="top">
         <el-card id="">
-          <el-link href="" @click.prevent="linkToDetail">{{item.title}}</el-link>
+          <el-link href="" @click.prevent="linkToDetail" style="color: rgb(38, 8, 145)">{{item.title}}</el-link>
           <a href="" @click.prevent="">
             <el-dropdown class="setting" @command="handleCommand">
               <span class="el-dropdown-link"><i class="el-icon-setting"></i></span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item icon="el-icon-edit" command="editBlog">编辑</el-dropdown-item>
-                <el-dropdown-item icon="el-icon-delete" command="deleteBlog(item.postId)">删除</el-dropdown-item>
-                <el-dropdown-item icon="el-icon-share" command="shareBlog">分享</el-dropdown-item>
+                <el-dropdown-item icon="el-icon-edit" :command="['edit',item.postId]">编辑</el-dropdown-item>
+                <el-dropdown-item icon="el-icon-delete" :command="['delete',item.postId,index]">删除</el-dropdown-item>
+                <el-dropdown-item icon="el-icon-share" :command="['share',item.postId]">分享</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </a>
-          <p>content</p>
+          <p>{{item.instruction}}</p>
         </el-card>
       </el-timeline-item>
     </el-timeline>
@@ -69,7 +70,7 @@ export default {
       })
     },
     handleCommand(cmd) {
-      if (cmd == 'editBlog') {
+      if (cmd[0] == 'edit') {
         this.$router.replace({
           path: '/BlogEditor',
           query: {
@@ -77,24 +78,28 @@ export default {
           }
         });
       }
-      else if (cmd == 'deleteBlog') {
-        this.deleteBlog();
+      else if (cmd[0] == 'delete') {
+        this.deleteBlog(cmd[1], cmd[2]);
       } else {
 
       }
     },
-    deleteBlog(id) {
+    deleteBlog(id, index) {
       this.$confirm('此操作将永久删除该博客, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-
-        console.log(id);
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        });
+        this.$http({
+          method: 'post',
+          url: '/Post/DeletePost/' + id,
+        }).then(res => {
+          this.$message({
+            type: 'success',
+            message: res.message
+          });
+          this.posts.splice(index, 1)
+        })
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -106,11 +111,11 @@ export default {
       this.$http({
         url: '/Post/GetPosts',
         params: {
-          blogId: this.blogId
+          blogId: this.$store.state.blog.blogId
         }
       }).then(res => {
+        this.posts = res.data
         console.log(this.posts);
-        this.posts = res.data.posts
       })
     },
   },
@@ -141,5 +146,17 @@ h4 {
 .setting {
   position: absolute;
   left: 95%;
+}
+
+.blogHeader {
+  font-size: 21px;
+  margin-top: 10px;
+  margin-left: 400px;
+}
+
+.headerbtn {
+  float: right;
+  margin-top: -3px;
+  margin-right: 380px;
 }
 </style>

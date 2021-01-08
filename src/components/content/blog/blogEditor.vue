@@ -1,7 +1,7 @@
 <template>
   <div id="editor">
     <el-page-header class="elheader" @back="goBack" content="博客编辑"></el-page-header>
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px">
+    <el-form class="editorForm" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px">
       <el-form-item label="标题" prop="title">
         <el-input id="title" v-model="ruleForm.title"></el-input>
       </el-form-item>
@@ -86,25 +86,32 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(res => {
         if (res) {
+
+          this.$store.state.blog.posts = [
+            {
+              postId: 0,
+              title: this.ruleForm.title,
+              Instruction: this.ruleForm.introduction,
+              content: this.ruleForm.mdcontent,
+            }
+          ];
+
           this.$http({
             method: 'post',
             url: '/Blog/SaveBlog',
-            data: {
-              blogId: this.$route.query.blogId,
-              url: "ligy.site",
-              userName: this.$store.state.userName,
-              posts: [
-                {
-                  title: this.ruleForm.title,
-                  Instruction: this.ruleForm.introduction,
-                  content: this.ruleForm.mdcontent,
-                }
-              ]
-            }
+            data: this.$store.state.blog
           }).then((result) => {
-            console.log(result);
+            this.$message({
+              type: 'success',
+              message: result.message
+            })
+
+            this.$router.replace('/Blog')
           }).catch((err) => {
-            console.log(err);
+            this.$message({
+              type: 'error',
+              message: err
+            })
           });
         }
       })
@@ -128,6 +135,11 @@ export default {
 }
 
 .mditor {
-  height: 550px;
+  height: 500px;
+}
+
+.editorForm {
+  position: relative;
+  right: 35px;
 }
 </style>
