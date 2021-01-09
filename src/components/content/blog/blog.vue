@@ -8,6 +8,7 @@
       </div>
     </div>
 
+    <h1 v-if="posts.length==0" style="text-align: center;">开始您的新博客</h1>
     <el-timeline class="timeline" v-for="(item,index) in posts" :key="item.postId">
       <el-timeline-item :id="item.postId" :timestamp="item.createTime" placement="top">
         <el-card id="">
@@ -103,7 +104,7 @@ export default {
             type: 'success',
             message: res.message
           });
-          this.posts.splice(index, 1)
+          this.refresh(this.pagination.pageSize, this.pagination.pageIndex);
         })
       }).catch(() => {
         this.$message({
@@ -122,10 +123,18 @@ export default {
         }
       }).then(res => {
 
-        this.$store.state.blog = res.data.blog
-        this.posts = res.data.posts
-        this.pagination.total = res.data.count
+        try {
+          this.$store.state.blog = res.data.blog
+          this.posts = res.data.posts
+          this.pagination.total = res.data.count
+        } catch (error) {
 
+        }
+      }).catch(err => {
+        this.$message({
+          type: 'error',
+          message: err
+        })
       })
     },
   },

@@ -21,7 +21,7 @@ const loading = {
 	},
 }
 
-axios.defaults.baseURL = 'http://localhost:5000/api/'
+axios.defaults.baseURL = 'http://192.168.1.104:5000/api/'
 axios.defaults.withCredentials = true
 
 export default function http(config) {
@@ -37,7 +37,6 @@ export default function http(config) {
 			loading.close()
 			if (res.data.status == 4000) {
 				this.$router.replace('/Login')
-				return
 			}
 
 			return res.data

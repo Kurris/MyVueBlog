@@ -57,15 +57,24 @@ export default {
                 type: 'success',
                 message: '登录成功'
               })
+
+              this.$router.replace('/BlogHome')
+            } else {
+              this.$message({
+                type: 'warning',
+                message: res.message
+              })
             }
             this.disBtn = true;
-
-            this.$router.replace('/BlogHome')
-
           }).catch(err => {
             window.localStorage.setItem("user_access_token", '');
             window.localStorage.setItem("user_name", '');
             this.disBtn = true;
+
+            this.$message({
+              type: 'error',
+              message: err
+            })
           })
 
         } else {

@@ -15,6 +15,7 @@
     <div class="buttonEditor">
       <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
       <el-button v-if="this.$route.query.type=='add'" @click="resetForm('ruleForm')">重置</el-button>
+      <el-button v-if="this.$route.query.type=='edit'" @click="goBack">取消</el-button>
     </div>
   </div>
 </template>
@@ -100,18 +101,27 @@ export default {
             method: 'post',
             url: '/Blog/SaveBlog',
             data: this.$store.state.blog
-          }).then((result) => {
+          }).then(res => {
+
+            let typeMsg = 'error'
+            if (res.status == 1001) {
+              typeMsg = 'success'
+            }
+
             this.$message({
-              type: 'success',
-              message: result.message
+              type: typeMsg,
+              message: res.message
             })
 
-            this.$router.replace({
-              path: '/BlogHome/BlogDetail',
-              query: {
-                postId: this.$route.query.postId
-              }
-            })
+            if (res.status == 1001) {
+              this.$router.replace({
+                path: '/BlogHome/BlogDetail',
+                query: {
+                  postId: this.$route.query.postId
+                }
+              })
+            }
+
           }).catch((err) => {
             this.$message({
               type: 'error',

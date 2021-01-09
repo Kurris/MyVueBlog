@@ -2,8 +2,7 @@
   <div id="container">
     <profile />
     <div id="content">
-      <el-backtop :right="400">
-        <div>Top</div>
+      <el-backtop :right="360" :bottom="100">
       </el-backtop>
       <keep-alive>
         <router-view />
@@ -14,11 +13,12 @@
 
 <script>
 import profile from '../components/content/profile/profile'
+import http from '../network/index'
 
 export default {
   data() {
     return {
-      currentPath: '/BlogHome/Blog'
+      currentPath: '/BlogHome/Blog',
     }
   },
   components: {
@@ -40,5 +40,6 @@ export default {
   top: 155px;
   margin-left: 400px;
   box-shadow: 0 0 20px -2px rgb(224, 241, 165);
+  /* padding-bottom: 100px; */
 }
 </style>
