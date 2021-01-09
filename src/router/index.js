@@ -7,39 +7,67 @@ const introduction = () => import('../components/content/profile/introduction.vu
 const blog = () => import('../components/content/blog/blog.vue')
 const blogDetail = () => import('../components/content/blog/blogDetail.vue')
 const blogEditor = () => import('../components/content/blog/blogEditor.vue')
+const container = () => import('../views/container')
+const login = () => import('../views/login.vue')
+
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+	return originalPush.call(this, location).catch(err => err)
+}
+
+const originalReplace = VueRouter.prototype.Replace
+VueRouter.prototype.Replace = function Replace(location) {
+	return originalReplace.call(this, location).catch(err => err)
+}
 
 const routes = [
 	{
 		path: '',
-		redirect: '/Blog',
+		redirect: '/Login',
 	},
 	{
-		path: '/Introduction',
-		component: introduction,
+		path: '/Login',
+		component: login,
 		meta: {
-			title: '个人介绍',
+			title: '博客登录',
 		},
 	},
 	{
-		path: '/Blog',
-		component: blog,
+		path: '/BlogHome',
+		component: container,
 		meta: {
-			title: '博客',
+			title: '博客主页(*￣︶￣)',
 		},
-	},
-	{
-		path: '/BlogDetail',
-		component: blogDetail,
-		meta: {
-			title: '浏览中',
-		},
-	},
-	{
-		path: '/BlogEditor',
-		component: blogEditor,
-		meta: {
-			title: '编辑中',
-		},
+		children: [
+			{
+				path: 'Blog',
+				component: blog,
+				meta: {
+					title: '博客',
+				},
+			},
+			{
+				path: 'BlogDetail',
+				component: blogDetail,
+				meta: {
+					title: '浏览中',
+				},
+			},
+			{
+				path: 'BlogEditor',
+				component: blogEditor,
+				meta: {
+					title: '编辑中',
+				},
+			},
+			{
+				path: 'Introduction',
+				component: introduction,
+				meta: {
+					title: '个人介绍',
+				},
+			},
+		],
 	},
 ]
 

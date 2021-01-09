@@ -1,16 +1,17 @@
 <template>
   <div id="profile">
-    <el-avatar :size="100" :src="profile.avatarUrl"></el-avatar>
+    <el-avatar :size="150" :src="profile.avatarUrl"></el-avatar>
 
     <div class="info" style="text-align: left">
       <p class="name" style="font-size: 20px; font-weight: bold"> {{ profile.name }}</p>
 
-      <p v-if="profile.phone" class="separated">phone: {{ profile.phone }}</p>
+      <p v-if="profile.phone!=''" class="separated">phone: {{ profile.phone }}</p>
       <p v-if="profile.email!=''" class="separated">email: {{ profile.email }}</p>
       Github:
       <el-link v-if="profile.githubUrl!=''" class=" separated" :href="profile.githubUrl" target="_blank" type="primary">{{ profile.githubUrl }}</el-link>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -21,39 +22,15 @@ export default {
     }
   },
   created() {
-    this.$http({
-      method: 'post',
-      url: '/User/Login',
-      data: {
-        userName: 'ligy',
-        password: 'zxc111'
-      }
-    }).then(res => {
-      if (res.status == 1000) {
-        window.localStorage.setItem("user_access_token", res.data.token);
-        this.$store.state.userName = res.data.userName;
 
-        return this.$http({
-          url: '/Profile/GetProfile',
-          params: {
-            name: res.data.userName
-          }
-        });
+    this.$http({
+      url: '/Profile/GetProfile',
+      params: {
+        name: window.localStorage.getItem('user_name')
       }
     }).then(res => {
       this.profile = res.data;
-
-      return this.$http({
-        url: '/Blog/GetBlog',
-        params: {
-          userName: this.$store.state.userName
-        }
-      })
-    }).then(res => {
-      this.$store.state.blog = res.data
-    }).catch(err => {
-      window.localStorage.setItem("user_access_token", '');
-    });
+    })
   },
 }
 </script>
@@ -79,6 +56,6 @@ export default {
 }
 
 .info {
-  margin-top: 40px;
+  margin-top: 60px;
 }
 </style>

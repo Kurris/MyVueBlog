@@ -81,7 +81,7 @@ export default {
   },
   methods: {
     goBack() {
-      this.$router.replace('/Blog')
+      this.$router.replace('/BlogHome/Blog')
     },
     submitForm(formName) {
       this.$refs[formName].validate(res => {
@@ -89,9 +89,9 @@ export default {
 
           this.$store.state.blog.posts = [
             {
-              postId: 0,
+              postId: this.$route.query.postId,
               title: this.ruleForm.title,
-              Instruction: this.ruleForm.introduction,
+              introduction: this.ruleForm.introduction,
               content: this.ruleForm.mdcontent,
             }
           ];
@@ -106,7 +106,12 @@ export default {
               message: result.message
             })
 
-            this.$router.replace('/Blog')
+            this.$router.replace({
+              path: '/BlogHome/BlogDetail',
+              query: {
+                postId: this.$route.query.postId
+              }
+            })
           }).catch((err) => {
             this.$message({
               type: 'error',
@@ -120,10 +125,29 @@ export default {
       this.$refs[formName].resetFields();
     }
   },
-  mounted() {
+  activated() {
     if (this.$route.query.type == 'add') {
       document.getElementById('title').focus()
+    } else {
+      this.$http({
+        url: '/Blog/GetPost',
+        params: {
+          blogId: this.$store.state.blog.blogId,
+          postId: this.$route.query.postId
+        }
+      }).then(res => {
+        console.log(res);
+        let post = res.data.posts[0]
+        this.ruleForm.title = post.title
+        this.ruleForm.introduction = post.introduction
+        this.ruleForm.mdcontent = post.content
+      })
     }
+  },
+  deactivated() {
+    this.ruleForm.title = ''
+    this.ruleForm.introduction = ''
+    this.ruleForm.mdcontent = ''
   },
 }
 </script>

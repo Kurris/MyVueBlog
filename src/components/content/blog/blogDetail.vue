@@ -1,17 +1,20 @@
 <template>
   <div id="blogDetail">
-    <el-page-header class="elheader" @back="goBack" content="博客浏览"></el-page-header>
-    <markdown :source="mdContent"></markdown>>
+    <el-page-header class="elheader" @back="goBack" :content="title" />
+    <markdown style="margin-left :10px" :content="content" />
   </div>
 </template>
 
 <script>
-import markdown from 'vue-markdown'
+import markdown from 'markdown-it-vue'
+import 'markdown-it-vue/dist/markdown-it-vue.css'
 
 export default {
+  name: 'detail',
   data() {
     return {
-      mdContent: ``
+      content: '',
+      title: '',
     }
   },
   components: {
@@ -19,8 +22,29 @@ export default {
   },
   methods: {
     goBack() {
-      this.$router.replace('/Blog')
+      this.$router.replace('/BlogHome/Blog')
     }
+  },
+  activated() {
+
+    this.$http({
+      url: '/Blog/GetPost',
+      params: {
+        blogId: this.$store.state.blog.blogId,
+        postId: this.$route.query.postId
+      }
+    }).then(res => {
+      try {
+        let post = res.data.posts[0]
+        this.content = post.content
+        this.title = post.title
+      } catch {
+      }
+    })
+  },
+  deactivated() {
+    this.content = ''
+    this.title = ''
   },
 }
 </script>

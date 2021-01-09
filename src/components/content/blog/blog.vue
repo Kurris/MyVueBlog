@@ -3,7 +3,7 @@
     <div class="blogHeader">
       <span>博客</span>
       <div class="headerbtn">
-        <el-button @click="refresh">刷新</el-button>
+        <el-button @click="refresh(5,1)">刷新</el-button>
         <el-button @click="addBlog">新增</el-button>
       </div>
     </div>
@@ -11,7 +11,7 @@
     <el-timeline class="timeline" v-for="(item,index) in posts" :key="item.postId">
       <el-timeline-item :id="item.postId" :timestamp="item.createTime" placement="top">
         <el-card id="">
-          <el-link href="" @click.prevent="linkToDetail" style="color: rgb(38, 8, 145)">{{item.title}}</el-link>
+          <el-link href="" @click.prevent="linkToDetail(item.postId)" style="color: rgb(38, 8, 145)">{{item.title}}</el-link>
           <a href="" @click.prevent="">
             <el-dropdown class="setting" @command="handleCommand">
               <span class="el-dropdown-link"><i class="el-icon-setting"></i></span>
@@ -22,11 +22,12 @@
               </el-dropdown-menu>
             </el-dropdown>
           </a>
-          <p>{{item.instruction}}</p>
+          <p>{{item.introduction}}</p>
         </el-card>
       </el-timeline-item>
     </el-timeline>
-    <el-pagination class="pagination" @current-change="changePage" :page-size="pagination.pageSize" :current-page.sync="pagination.currentPage" layout="total, prev, pager, next" :total="pagination.total">
+
+    <el-pagination class="pagination" @current-change="changePage" :page-size="pagination.pageSize" :current-page.sync="pagination.pageIndex" layout="total, prev, pager, next" :total="pagination.total">
     </el-pagination>
 
   </div>
@@ -40,7 +41,7 @@ export default {
   data() {
     return {
       pagination: {
-        currentPage: 0,
+        pageIndex: 1,
         pageSize: 5,
         total: 0,
       },
@@ -53,28 +54,32 @@ export default {
   methods: {
     addBlog() {
       this.$router.replace({
-        path: '/BlogEditor',
+        path: '/BlogHome/BlogEditor',
         query: {
           type: 'add',
+          postId: 0
         }
       })
     },
     changePage(page) {
+      this.pagination.pageIndex = page
+      this.refresh(this.pagination.pageSize, this.pagination.pageIndex)
     },
-    linkToDetail() {
+    linkToDetail(postId) {
       this.$router.replace({
-        path: '/BlogDetail',
+        path: '/BlogHome/BlogDetail',
         query: {
-
+          postId: postId
         }
       })
     },
     handleCommand(cmd) {
       if (cmd[0] == 'edit') {
         this.$router.replace({
-          path: '/BlogEditor',
+          path: '/BlogHome/BlogEditor',
           query: {
-            type: 'edit'
+            type: 'edit',
+            postId: cmd[1]
           }
         });
       }
@@ -107,20 +112,25 @@ export default {
         });
       });
     },
-    refresh() {
+    refresh(size, index) {
       this.$http({
-        url: '/Post/GetPosts',
+        url: '/Blog/GetBlogWithPagniation',
         params: {
-          blogId: this.$store.state.blog.blogId
+          userName: window.localStorage.getItem('user_name'),
+          pageSize: size,
+          pageIndex: index
         }
       }).then(res => {
-        this.posts = res.data
-        console.log(this.posts);
+
+        this.$store.state.blog = res.data.blog
+        this.posts = res.data.posts
+        this.pagination.total = res.data.count
+
       })
     },
   },
-  mounted() {
-    this.refresh();
+  activated() {
+    this.refresh(this.pagination.pageSize, this.pagination.pageIndex)
   },
 }
 </script>

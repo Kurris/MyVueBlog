@@ -35,19 +35,16 @@ export default function http(config) {
 	instance.interceptors.response.use(
 		res => {
 			loading.close()
-			if (res.data.status > 1001) {
-				Message({
-					message: res.data.message,
-					type: 'error',
-					duration: 5000,
-				})
-			} else {
-				return res.data
+			if (res.data.status == 4000) {
+				this.$router.replace('/Login')
+				return
 			}
+
+			return res.data
 		},
 		err => {
 			loading.close()
-			let msg = err.message == 'Network Error' ? '无法连接网络' : err.message
+			let msg = err.message == 'Network Error' ? '无法连接到服务器' : err.message
 			Message({
 				message: msg,
 				type: 'error',
