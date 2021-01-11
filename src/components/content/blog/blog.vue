@@ -104,7 +104,7 @@ export default {
             type: 'success',
             message: res.message
           });
-          this.refresh(this.pagination.pageSize, this.pagination.pageIndex);
+          this.getBlogWithPagniation(this.pagination.pageSize, this.pagination.pageIndex);
         })
       }).catch(() => {
         this.$message({
@@ -123,13 +123,12 @@ export default {
         }
       }).then(res => {
 
-        try {
-          this.$store.state.blog = res.data.blog
+        if (res.data != null) {
+          window.localStorage.setItem("blog", JSON.stringify(res.data.blog))
           this.posts = res.data.posts
           this.pagination.total = res.data.total
-        } catch (error) {
-
         }
+
       }).catch(err => {
         this.$message({
           type: 'error',

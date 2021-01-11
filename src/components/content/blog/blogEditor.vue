@@ -88,7 +88,19 @@ export default {
       this.$refs[formName].validate(res => {
         if (res) {
 
-          this.$store.state.blog.posts = [
+          let blog;
+
+          let blogJson = window.localStorage.getItem("blog");
+          if (blogJson == '' || blogJson == null) {
+            blog = {
+              userName: window.localStorage.getItem('user_name'),
+              posts: null
+            }
+          } else {
+            blog = JSON.parse(blogJson)
+          }
+
+          blog.posts = [
             {
               postId: this.$route.query.postId,
               title: this.ruleForm.title,
@@ -100,7 +112,7 @@ export default {
           this.$http({
             method: 'post',
             url: '/Blog/SaveBlog',
-            data: this.$store.state.blog
+            data: blog
           }).then(res => {
 
             let typeMsg = 'error'
@@ -142,7 +154,7 @@ export default {
       this.$http({
         url: '/Blog/GetBlogCurrentPost',
         params: {
-          blogId: this.$store.state.blog.blogId,
+          blogId: JSON.parse(window.localStorage.getItem("blog")).blogId,
           postId: this.$route.query.postId
         }
       }).then(res => {
