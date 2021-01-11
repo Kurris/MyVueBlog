@@ -21,8 +21,9 @@ const loading = {
 	},
 }
 
-axios.defaults.baseURL = 'http://192.168.1.104:5000/api/'
+axios.defaults.baseURL = 'http://localhost:5000/api/'
 axios.defaults.withCredentials = true
+axios.defaults.timeout = 5000
 
 export default function http(config) {
 	const instance = axios.create()
@@ -49,6 +50,7 @@ export default function http(config) {
 				type: 'error',
 				duration: 5000,
 			})
+			return Promise.reject(err)
 		}
 	)
 

@@ -16,6 +16,7 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
@@ -36,10 +37,10 @@ export default {
   },
   methods: {
     onSubmit(form) {
-
-      this.$refs[form].validate(res => {
-        if (res) {
+      this.$refs[form].validate(valid => {
+        if (valid) {
           this.disBtn = false
+
           this.$http({
             method: 'post',
             url: '/User/Login',
@@ -47,42 +48,33 @@ export default {
               userName: this.form.userName,
               password: this.form.password
             }
-          }).then(res => {
-            if (res.status == 1000) {
+          }).then(result => {
 
-              window.localStorage.setItem("user_access_token", res.data.token);
-              window.localStorage.setItem("user_name", res.data.userName);
+            if (result.status == 1000) {
+
+              window.localStorage.setItem("user_access_token", result.data.token);
+              window.localStorage.setItem("user_name", result.data.userName);
 
               this.$message({
                 type: 'success',
                 message: '登录成功'
               })
 
+              //跳转到主页
               this.$router.replace('/BlogHome')
+
             } else {
               this.$message({
                 type: 'warning',
-                message: res.message
+                message: result.message
               })
             }
-            this.disBtn = true;
           }).catch(err => {
             window.localStorage.setItem("user_access_token", '');
             window.localStorage.setItem("user_name", '');
-            this.disBtn = true;
-
-            this.$message({
-              type: 'error',
-              message: err
-            })
-          })
-
-        } else {
-          this.$message({
-            type: 'warning',
-            message: '请检查账号密码是否为空'
-          })
+          });
         }
+        this.disBtn = true;
       })
     }
   },

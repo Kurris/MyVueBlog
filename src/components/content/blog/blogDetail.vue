@@ -28,7 +28,7 @@ export default {
   activated() {
 
     this.$http({
-      url: '/Blog/GetPost',
+      url: '/Blog/GetBlogCurrentPost',
       params: {
         blogId: this.$store.state.blog.blogId,
         postId: this.$route.query.postId

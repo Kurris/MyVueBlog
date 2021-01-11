@@ -3,7 +3,7 @@
     <div class="blogHeader">
       <span>博客</span>
       <div class="headerbtn">
-        <el-button @click="refresh(5,1)">刷新</el-button>
+        <el-button @click="getBlogWithPagniation(5,1)">刷新</el-button>
         <el-button @click="addBlog">新增</el-button>
       </div>
     </div>
@@ -64,7 +64,7 @@ export default {
     },
     changePage(page) {
       this.pagination.pageIndex = page
-      this.refresh(this.pagination.pageSize, this.pagination.pageIndex)
+      this.getBlogWithPagniation(this.pagination.pageSize, this.pagination.pageIndex)
     },
     linkToDetail(postId) {
       this.$router.replace({
@@ -113,7 +113,7 @@ export default {
         });
       });
     },
-    refresh(size, index) {
+    getBlogWithPagniation(size, index) {
       this.$http({
         url: '/Blog/GetBlogWithPagniation',
         params: {
@@ -126,7 +126,7 @@ export default {
         try {
           this.$store.state.blog = res.data.blog
           this.posts = res.data.posts
-          this.pagination.total = res.data.count
+          this.pagination.total = res.data.total
         } catch (error) {
 
         }
@@ -139,7 +139,7 @@ export default {
     },
   },
   activated() {
-    this.refresh(this.pagination.pageSize, this.pagination.pageIndex)
+    this.getBlogWithPagniation(this.pagination.pageSize, this.pagination.pageIndex)
   },
 }
 </script>

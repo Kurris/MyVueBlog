@@ -140,13 +140,13 @@ export default {
       document.getElementById('title').focus()
     } else {
       this.$http({
-        url: '/Blog/GetPost',
+        url: '/Blog/GetBlogCurrentPost',
         params: {
           blogId: this.$store.state.blog.blogId,
           postId: this.$route.query.postId
         }
       }).then(res => {
-        console.log(res);
+
         let post = res.data.posts[0]
         this.ruleForm.title = post.title
         this.ruleForm.introduction = post.introduction
