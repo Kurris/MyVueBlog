@@ -18,13 +18,13 @@
     <el-dialog title="注册信息" :visible.sync="registerVisible" width="30%" :close-on-click-modal="false">
       <el-form ref="registerForm" :model="registerForm" :rules="registerRules" label-width="80px">
         <el-form-item label="账号" prop="userName">
-          <el-input type="text" placeholder="请输入账号名称" v-model.lazy="registerForm.userName" :autofocus="false" clearable />
+          <el-input type="text" placeholder="请输入账号名称" v-model.lazy="registerForm.userName" auto-complete="false" clearable />
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input type="password" placeholder="请输入密码" v-model.lazy="registerForm.password" :autofocus="false" clearable />
+          <el-input type="password" placeholder="请输入密码" v-model.lazy="registerForm.password" :auto-complete="false" clearable />
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
-          <el-input type="email" placeholder="请输入邮箱" v-model.lazy="registerForm.email" :autofocus="false" />
+          <el-input type="email" placeholder="请输入邮箱" v-model.lazy="registerForm.email" :auto-complete="false" />
         </el-form-item>
         <el-form-item label="手机" prop="phone">
           <el-input type="tel" placeholder="请输入手机号" v-model.lazy.number="registerForm.phone" />
@@ -100,8 +100,8 @@ export default {
       registerRules: {
         userName: [{ required: true, message: '账号不可为空', trigger: 'blur' }],
         password: [{ required: true, message: '密码不可为空', trigger: 'blur' }],
-        email: [{ validator: checkEmail, trigger: 'blur' }],
-        phone: [{ validator: checkPhone, trigger: 'blur' }]
+        email: [{ validator: checkEmail, required:true,trigger: 'blur' }],
+        phone: [{ validator: checkPhone,required:true, trigger: 'blur' }]
       }
     }
   },
@@ -112,6 +112,7 @@ export default {
           this.disBtn = false
 
           this.$http({
+            target:'#login',
             method: 'post',
             url: '/User/Login',
             data: {

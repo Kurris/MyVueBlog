@@ -4,11 +4,12 @@ import App from './App.vue'
 import EleUi from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
 
 import store from './store/index.js'
 import router from './router/index.js'
 import Http from './network/index.js'
-import 'mavon-editor/dist/css/index.css'
+
 
 Vue.prototype.$http = Http
 Vue.config.productionTip = false
