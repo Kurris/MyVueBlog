@@ -30,7 +30,7 @@ export default {
       target: '.blogDetail',
       url: '/Blog/GetBlogCurrentPost',
       params: {
-        blogId: this.$store.state.blog.blogId,
+        blogId: JSON.parse(window.localStorage.getItem("blog")).blogId,
         postId: this.$route.query.postId
       }
     }).then(res => {
