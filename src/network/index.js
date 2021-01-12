@@ -19,13 +19,19 @@ export default function http(config) {
 
 			if (result.data.status == 4000) {
 				this.$router.replace('/Login')
+			} else if (result.data.status == 4002) {
+				this.$message({
+					tyoe: 'warning',
+					message: result.data.data.map(x => x.message).join(','),
+				})
+			} else {
+				return result.data
 			}
-
-			return result.data
 		},
 		error => {
 			this.$store.state.loading.close()
 			let msg = error.message == 'Network Error' ? '无法连接到服务器' : error.message
+
 			this.$message({
 				message: msg,
 				type: 'error',

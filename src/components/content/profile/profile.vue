@@ -1,15 +1,18 @@
 <template>
   <div id="profile">
-    <el-avatar :size="150" :src="profile.avatarUrl"></el-avatar>
+    <div v-if="profile.name!=''">
+      <el-avatar :size="150" :src="profile.avatarUrl"></el-avatar>
 
-    <div class="info" style="text-align: left">
-      <p class="name" style="font-size: 20px; font-weight: bold"> {{ profile.name }}</p>
+      <div class="info" style="text-align: left">
+        <p class="name" style="font-size: 20px; font-weight: bold"> {{ profile.name }}</p>
 
-      <p v-if="profile.phone!=''" class="separated">phone: {{ profile.phone }}</p>
-      <p v-if="profile.email!=''" class="separated">email: {{ profile.email }}</p>
-      Github:
-      <el-link v-if="profile.githubUrl!=''" class=" separated" :href="profile.githubUrl" target="_blank" type="primary">{{ profile.githubUrl }}</el-link>
+        <p v-if="profile.phone!=''" class="separated">phone: {{ profile.phone }}</p>
+        <p v-if="profile.email!=''" class="separated">email: {{ profile.email }}</p>
+        <span v-if="profile.githubUrl!=''">Github:</span>
+        <el-link v-if="profile.githubUrl!=''" class=" separated" :href="profile.githubUrl" target="_blank" type="primary">{{ profile.githubUrl }}</el-link>
+      </div>
     </div>
+
   </div>
 
 </template>
@@ -18,7 +21,13 @@
 export default {
   data() {
     return {
-      profile: {},
+      profile: {
+        avatarUrl: '',
+        name: '',
+        phone: '',
+        email: '',
+        githubUrl: '',
+      },
     }
   },
   created() {
@@ -29,7 +38,7 @@ export default {
         name: window.localStorage.getItem('user_name')
       }
     }).then(res => {
-      this.profile = res.data;
+      if (res.data != null) this.profile = res.data
     })
   },
 }

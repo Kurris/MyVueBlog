@@ -3,30 +3,33 @@
     <div class="blogHeader">
       <span>博客</span>
       <div class="headerbtn">
-        <el-button @click="getBlogWithPagniation(5,1)">刷新</el-button>
-        <el-button @click="addBlog">新增</el-button>
+        <el-button type="primary" v-show="posts.length>0" @click="getBlogWithPagniation(5,1)">刷新</el-button>
+        <el-button type="primary" @click="addBlog">新增</el-button>
       </div>
     </div>
 
-    <h1 v-if="posts.length==0" style="text-align: center;">开始您的新博客</h1>
-    <el-timeline class="timeline" v-for="(item,index) in posts" :key="item.postId">
-      <el-timeline-item :id="item.postId" :timestamp="item.createTime" placement="top">
-        <el-card id="">
-          <el-link href="" @click.prevent="linkToDetail(item.postId)" style="color: rgb(38, 8, 145)">{{item.title}}</el-link>
-          <a href="" @click.prevent="">
-            <el-dropdown class="setting" @command="handleCommand">
-              <span class="el-dropdown-link"><i class="el-icon-setting"></i></span>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item icon="el-icon-edit" :command="['edit',item.postId]">编辑</el-dropdown-item>
-                <el-dropdown-item icon="el-icon-delete" :command="['delete',item.postId,index]">删除</el-dropdown-item>
-                <el-dropdown-item icon="el-icon-share" :command="['share',item.postId]">分享</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </a>
-          <p>{{item.introduction}}</p>
-        </el-card>
-      </el-timeline-item>
-    </el-timeline>
+    <div class="timeline">
+      <h1 v-show="posts.length==0" style="text-align: center;">开始您的新博客</h1>
+
+      <el-timeline v-for="(item,index) in posts" :key="item.postId">
+        <el-timeline-item :id="item.postId" :timestamp="item.createTime" placement="top">
+          <el-card id="">
+            <el-link href="" @click.prevent="linkToDetail(item.postId)" style="color: rgb(38, 8, 145)">{{item.title}}</el-link>
+            <a href="" @click.prevent="">
+              <el-dropdown class="setting" @command="handleCommand">
+                <span class="el-dropdown-link"><i class="el-icon-setting"></i></span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item icon="el-icon-edit" :command="['edit',item.postId]">编辑</el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-delete" :command="['delete',item.postId,index]">删除</el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-share" :command="['share',item.postId]">分享</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </a>
+            <p>{{item.introduction}}</p>
+          </el-card>
+        </el-timeline-item>
+      </el-timeline>
+    </div>
 
     <el-pagination class="pagination" @current-change="changePage" :page-size="pagination.pageSize" :current-page.sync="pagination.pageIndex" layout="total, prev, pager, next" :total="pagination.total">
     </el-pagination>

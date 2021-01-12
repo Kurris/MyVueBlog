@@ -15,15 +15,24 @@
       </el-form-item>
     </el-form>
 
-    <el-dialog title="注册信息" :visible.sync="registerVisible">
-      <el-form :model="registerForm">
-        <el-form-item label="账号名称" label-width="100px">
-          <el-input v-model="registerForm.name" autocomplete="off"></el-input>
+    <el-dialog title="注册信息" :visible.sync="registerVisible" width="30%" :close-on-click-modal="false">
+      <el-form ref="registerForm" :model="registerForm" :rules="registerRules" label-width="80px">
+        <el-form-item label="账号" prop="userName">
+          <el-input type="text" placeholder="请输入账号名称" v-model.lazy="registerForm.userName" :autofocus="false" clearable />
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input type="password" placeholder="请输入密码" v-model.lazy="registerForm.password" :autofocus="false" clearable />
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input type="email" placeholder="请输入邮箱" v-model.lazy="registerForm.email" :autofocus="false" />
+        </el-form-item>
+        <el-form-item label="手机" prop="phone">
+          <el-input type="tel" placeholder="请输入手机号" v-model.lazy.number="registerForm.phone" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="registerVisible = false">取消</el-button>
-        <el-button type="primary" @click="registerVisible = false">确定</el-button>
+        <el-button type="primary" @click="register('registerForm')">确定</el-button>
+        <el-button type="primary" @click="reset('registerForm')">重置</el-button>
       </div>
     </el-dialog>
   </div>
@@ -33,6 +42,40 @@
 
 export default {
   data() {
+    let checkPhone = (rule, value, callback) => {
+      const phoneReg = /^1[3|4|5|7|8][0-9]{9}$/
+      if (!value) {
+        return callback(new Error('电话号码不能为空'))
+      }
+      setTimeout(() => {
+        // Number.isInteger是es6验证数字是否为整数的方法,但是我实际用的时候输入的数字总是识别成字符串
+        // 所以我就在前面加了一个+实现隐式转换
+
+        if (!Number.isInteger(+value)) {
+          callback(new Error('请输入数字值'))
+        } else {
+          if (phoneReg.test(value)) {
+            callback()
+          } else {
+            callback(new Error('电话号码格式不正确'))
+          }
+        }
+      }, 100)
+    }
+    let checkEmail = (rule, value, callback) => {
+      const mailReg = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/
+      if (!value) {
+        return callback(new Error('邮箱不能为空'))
+      }
+      setTimeout(() => {
+        if (mailReg.test(value)) {
+          callback()
+        } else {
+          callback(new Error('请输入正确的邮箱格式'))
+        }
+      }, 100)
+    }
+
     return {
       registerVisible: false,
       disBtn: true,
@@ -41,8 +84,10 @@ export default {
         password: ''
       },
       registerForm: {
-        name: '',
-        region: ''
+        userName: '',
+        password: '',
+        email: '',
+        phone: '',
       },
       loginRules: {
         userName: [
@@ -52,6 +97,12 @@ export default {
           { required: true, message: '密码不可为空', trigger: 'blur' }
         ]
       },
+      registerRules: {
+        userName: [{ required: true, message: '账号不可为空', trigger: 'blur' }],
+        password: [{ required: true, message: '密码不可为空', trigger: 'blur' }],
+        email: [{ validator: checkEmail, trigger: 'blur' }],
+        phone: [{ validator: checkPhone, trigger: 'blur' }]
+      }
     }
   },
   methods: {
@@ -96,14 +147,46 @@ export default {
         this.disBtn = true;
       })
     },
-    register() {
-      this.registerVisible = true;
-    }
-    ,
+    register(form) {
+
+      this.$refs[form].validate(res => {
+        if (res) {
+
+          this.$http({
+            method: 'post',
+            url: '/User/SignUp',
+            data: {
+              userName: this.registerForm.userName,
+              password: this.registerForm.password,
+              email: this.registerForm.email,
+              phone: this.registerForm.email
+            }
+          }).then(result => {
+            this.$message({
+              type: 'success',
+              message: '注册成功'
+            })
+            this.registerVisible = false
+          })
+
+          this.registerVisible = true;
+        }
+      })
+    },
+    reset(form) {
+      this.$refs[form].resetFields();
+    },
     forgetPwd() {
-      this.$msgbox("在做了")
+
     }
   },
+  watch: {
+    registerVisible(val) {
+      if (!val) {
+        this.reset('registerForm')
+      }
+    }
+  }
 }
 </script>
 

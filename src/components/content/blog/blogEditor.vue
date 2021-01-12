@@ -86,62 +86,53 @@ export default {
     },
     submitForm(formName) {
       this.$refs[formName].validate(res => {
-        if (res) {
+        if (!res) return;
 
-          let blog;
+        let blog;
 
-          let blogJson = window.localStorage.getItem("blog");
-          if (blogJson == '' || blogJson == null) {
-            blog = {
-              userName: window.localStorage.getItem('user_name'),
-              posts: null
-            }
-          } else {
-            blog = JSON.parse(blogJson)
+        let blogJson = window.localStorage.getItem("blog");
+        if (blogJson == '' || blogJson == null) {
+          blog = {
+            userName: window.localStorage.getItem('user_name'),
+            posts: null
           }
+        } else {
+          blog = JSON.parse(blogJson)
+        }
 
-          blog.posts = [
-            {
-              postId: this.$route.query.postId,
-              title: this.ruleForm.title,
-              introduction: this.ruleForm.introduction,
-              content: this.ruleForm.mdcontent,
-            }
-          ];
+        blog.posts = [
+          {
+            postId: this.$route.query.postId,
+            title: this.ruleForm.title,
+            introduction: this.ruleForm.introduction,
+            content: this.ruleForm.mdcontent,
+          }
+        ];
 
-          this.$http({
-            target: '.editor',
-            method: 'post',
-            url: '/Blog/SaveBlog',
-            data: blog
-          }).then(res => {
+        this.$http({
+          target: '.editor',
+          method: 'post',
+          url: '/Blog/SaveBlog',
+          data: blog
+        }).then(res => {
 
-            let typeMsg = 'error'
-            if (res.status == 1001) {
-              typeMsg = 'success'
-            }
-
+          if (res.status == 1001) {
             this.$message({
-              type: typeMsg,
+              type: "success",
               message: res.message
             })
+          }
 
-            if (res.status == 1001) {
-              this.$router.replace({
-                path: '/BlogHome/BlogDetail',
-                query: {
-                  postId: this.$route.query.postId
-                }
-              })
-            }
-
-          }).catch((err) => {
-            this.$message({
-              type: 'error',
-              message: err
+          if (res.status == 1001) {
+            this.$router.replace({
+              path: '/BlogHome/BlogDetail',
+              query: {
+                postId: this.$route.query.postId
+              }
             })
-          });
-        }
+          }
+        })
+
       })
     },
     resetForm(formName) {
