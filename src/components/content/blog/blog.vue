@@ -97,6 +97,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$http({
+          target: '.timeline',
           method: 'post',
           url: '/Post/DeletePost/' + id,
         }).then(res => {
@@ -104,7 +105,7 @@ export default {
             type: 'success',
             message: res.message
           });
-          this.refresh(this.pagination.pageSize, this.pagination.pageIndex);
+          this.getBlogWithPagniation(this.pagination.pageSize, this.pagination.pageIndex);
         })
       }).catch(() => {
         this.$message({
@@ -115,6 +116,7 @@ export default {
     },
     getBlogWithPagniation(size, index) {
       this.$http({
+        target: '.timeline',
         url: '/Blog/GetBlogWithPagniation',
         params: {
           userName: window.localStorage.getItem('user_name'),

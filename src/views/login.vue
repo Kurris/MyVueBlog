@@ -1,17 +1,31 @@
 <template>
   <div id="login">
-    <el-form ref="loginForm" :model="form" :rules="rules" label-width="80px" class="login-box">
+    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-width="80px" class="login-box">
       <h3 class="login-title">欢迎登录</h3>
       <el-form-item label="账号" prop="userName">
-        <el-input type="text" placeholder="请输入账号" v-model.lazy="form.userName" clearable />
+        <el-input type="text" placeholder="请输入账号" v-model.lazy="loginForm.userName" clearable />
       </el-form-item>
       <el-form-item label="密码" prop="password">
-        <el-input type="password" placeholder="请输入密码" v-model.lazy="form.password" @keyup.enter.native="onSubmit('loginForm')" clearable />
+        <el-input type="password" placeholder="请输入密码" v-model.lazy="loginForm.password" @keyup.enter.native="login('loginForm')" clearable />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit('loginForm')" :disabled="!disBtn">登录</el-button>
+        <el-button type="primary" @click="login('loginForm')" :disabled="!disBtn">登录</el-button>
+        <el-button type="primary" @click="registerVisible=true" :disabled="!disBtn">注册</el-button>
+        <el-link type="info" style="fontSize:10px;float:right;" @click="forgetPwd" :disabled="!disBtn">忘记密码?</el-link>
       </el-form-item>
     </el-form>
+
+    <el-dialog title="注册信息" :visible.sync="registerVisible">
+      <el-form :model="registerForm">
+        <el-form-item label="账号名称" label-width="100px">
+          <el-input v-model="registerForm.name" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="registerVisible = false">取消</el-button>
+        <el-button type="primary" @click="registerVisible = false">确定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -20,12 +34,17 @@
 export default {
   data() {
     return {
+      registerVisible: false,
       disBtn: true,
-      form: {
+      loginForm: {
         userName: '',
         password: ''
       },
-      rules: {
+      registerForm: {
+        name: '',
+        region: ''
+      },
+      loginRules: {
         userName: [
           { required: true, message: '账号不可为空', trigger: 'blur' }
         ],
@@ -36,7 +55,7 @@ export default {
     }
   },
   methods: {
-    onSubmit(form) {
+    login(form) {
       this.$refs[form].validate(valid => {
         if (valid) {
           this.disBtn = false
@@ -45,8 +64,8 @@ export default {
             method: 'post',
             url: '/User/Login',
             data: {
-              userName: this.form.userName,
-              password: this.form.password
+              userName: this.loginForm.userName,
+              password: this.loginForm.password
             }
           }).then(result => {
 
@@ -76,6 +95,13 @@ export default {
         }
         this.disBtn = true;
       })
+    },
+    register() {
+      this.registerVisible = true;
+    }
+    ,
+    forgetPwd() {
+      this.$msgbox("在做了")
     }
   },
 }

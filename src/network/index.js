@@ -1,63 +1,42 @@
 import axios from 'axios'
-import { Loading, Message } from 'element-ui'
-
-const loading = {
-	loadingInstance: null,
-	open() {
-		if (this.loadingInstance === null) {
-			this.loadingInstance = Loading.service({
-				text: '等待中...',
-				spinner: 'el-icon-loading',
-				background: 'rgba(0, 0, 0, 0.01)',
-				customClass: 'loading',
-			})
-		}
-	},
-	close() {
-		if (this.loadingInstance != null) {
-			this.loadingInstance.close()
-		}
-		this.loadingInstance = null
-	},
-}
-
-axios.defaults.baseURL = 'http://localhost:5000/api/'
-axios.defaults.withCredentials = true
-axios.defaults.timeout = 5000
 
 export default function http(config) {
-	const instance = axios.create()
+	const instance = axios.create({
+		baseURL: config.baseURL == null || config.baseURL == '' ? 'http://47.116.143.51:5000/api/' : config.baseURL,
+		timeout: 30000,
+		withCredentials: true, //携带Cookie
+	})
 
 	instance.interceptors.request.use(config => {
-		loading.open()
+		this.$store.state.loading.target = config.target
+		this.$store.state.loading.open()
 		return config
 	})
 
 	instance.interceptors.response.use(
-		res => {
-			loading.close()
-			if (res.data.status == 4000) {
+		result => {
+			this.$store.state.loading.close()
+
+			if (result.data.status == 4000) {
 				this.$router.replace('/Login')
 			}
 
-			return res.data
+			return result.data
 		},
-		err => {
-			loading.close()
-			let msg = err.message == 'Network Error' ? '无法连接到服务器' : err.message
-			Message({
+		error => {
+			this.$store.state.loading.close()
+			let msg = error.message == 'Network Error' ? '无法连接到服务器' : error.message
+			this.$message({
 				message: msg,
 				type: 'error',
 				duration: 5000,
 			})
-			return Promise.reject(err)
+			return Promise.reject(error)
 		}
 	)
 
-	let token = window.localStorage.getItem('user_access_token')
-	config.headers = {
-		user_access_token: token,
-	}
+	let token = localStorage.getItem('user_access_token')
+	config.headers = { user_access_token: token }
 
 	return instance(config)
 }

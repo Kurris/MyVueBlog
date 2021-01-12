@@ -1,7 +1,7 @@
 <template>
-  <div id="blogDetail">
+  <div id="blogDetail" class="blogDetail">
     <el-page-header class="elheader" @back="goBack" :content="title" />
-    <markdown style="margin-left :10px" :content="content" />
+    <markdown class="md" :content="content" />
   </div>
 </template>
 
@@ -26,20 +26,17 @@ export default {
     }
   },
   activated() {
-
     this.$http({
+      target: '.blogDetail',
       url: '/Blog/GetBlogCurrentPost',
       params: {
         blogId: this.$store.state.blog.blogId,
         postId: this.$route.query.postId
       }
     }).then(res => {
-      try {
-        let post = res.data.posts[0]
-        this.content = post.content
-        this.title = post.title
-      } catch {
-      }
+      let post = res.data.posts[0]
+      this.content = post.content
+      this.title = post.title
     })
   },
   deactivated() {
@@ -50,4 +47,7 @@ export default {
 </script>
 
 <style>
+.md {
+  margin-left: 10px;
+}
 </style>

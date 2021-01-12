@@ -1,6 +1,6 @@
 import vuex from 'vuex'
 import vue from 'vue'
-import http from '../network/index'
+import loading from '../utils/loading'
 
 vue.use(vuex)
 
@@ -8,6 +8,7 @@ const store = new vuex.Store({
 	state: {
 		userName: '',
 		blog: {},
+		loading: loading,
 	},
 	mutations: {},
 	actions: {},

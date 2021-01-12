@@ -1,5 +1,5 @@
 <template>
-  <div id="editor">
+  <div id="editor" class="editor">
     <el-page-header class="elheader" @back="goBack" content="博客编辑"></el-page-header>
     <el-form class="editorForm" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px">
       <el-form-item label="标题" prop="title">
@@ -98,6 +98,7 @@ export default {
           ];
 
           this.$http({
+            target: '.editor',
             method: 'post',
             url: '/Blog/SaveBlog',
             data: this.$store.state.blog
@@ -140,6 +141,7 @@ export default {
       document.getElementById('title').focus()
     } else {
       this.$http({
+        target: '.editor',
         url: '/Blog/GetBlogCurrentPost',
         params: {
           blogId: this.$store.state.blog.blogId,
