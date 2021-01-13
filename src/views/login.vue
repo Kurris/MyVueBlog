@@ -1,5 +1,7 @@
 <template>
   <div id="login">
+    <img :src="backgroundImg" class="img" alt="">
+
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-width="80px" class="login-box">
       <h3 class="login-title">欢迎登录</h3>
       <el-form-item label="账号" prop="userName">
@@ -18,13 +20,13 @@
     <el-dialog title="注册信息" :visible.sync="registerVisible" width="30%" :close-on-click-modal="false">
       <el-form ref="registerForm" :model="registerForm" :rules="registerRules" label-width="80px">
         <el-form-item label="账号" prop="userName">
-          <el-input type="text" placeholder="请输入账号名称" v-model.lazy="registerForm.userName" auto-complete="false" clearable />
+          <el-input type="text" placeholder="请输入账号名称" v-model.lazy="registerForm.userName" auto-complete="off" clearable />
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input type="password" placeholder="请输入密码" v-model.lazy="registerForm.password" :auto-complete="false" clearable />
+          <el-input type="password" placeholder="请输入密码" v-model.lazy="registerForm.password" auto-complete="off" clearable />
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
-          <el-input type="email" placeholder="请输入邮箱" v-model.lazy="registerForm.email" :auto-complete="false" />
+          <el-input type="email" placeholder="请输入邮箱" v-model.lazy="registerForm.email" auto-complete="off" />
         </el-form-item>
         <el-form-item label="手机" prop="phone">
           <el-input type="tel" placeholder="请输入手机号" v-model.lazy.number="registerForm.phone" />
@@ -77,6 +79,7 @@ export default {
     }
 
     return {
+      backgroundImg: '',
       registerVisible: false,
       disBtn: true,
       loginForm: {
@@ -100,8 +103,8 @@ export default {
       registerRules: {
         userName: [{ required: true, message: '账号不可为空', trigger: 'blur' }],
         password: [{ required: true, message: '密码不可为空', trigger: 'blur' }],
-        email: [{ validator: checkEmail, required:true,trigger: 'blur' }],
-        phone: [{ validator: checkPhone,required:true, trigger: 'blur' }]
+        email: [{ validator: checkEmail, required: true, trigger: 'blur' }],
+        phone: [{ validator: checkPhone, required: true, trigger: 'blur' }]
       }
     }
   },
@@ -112,7 +115,7 @@ export default {
           this.disBtn = false
 
           this.$http({
-            target:'#login',
+            target: '#login',
             method: 'post',
             url: '/User/Login',
             data: {
@@ -187,6 +190,14 @@ export default {
         this.reset('registerForm')
       }
     }
+  },
+  created() {
+    this.$http({ url: '/Bing/GetDayImage' })
+      .then(res => {
+        if (res.data != null) {
+          this.backgroundImg = res.data;
+        }
+      })
   }
 }
 </script>
@@ -195,15 +206,24 @@ export default {
 .login-box {
   border: 1px solid #dcdfe6;
   width: 350px;
-  margin: 180px auto;
+  position: absolute;
   padding: 35px 35px 15px 35px;
   border-radius: 5px;
   box-shadow: 0 0 25px #909399;
+  background-color: white;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
-
 .login-title {
   text-align: center;
   margin: 0 auto 40px auto;
   color: #303133;
+}
+.img {
+  width: 100%;
+  height: 100%; /**宽高100%是为了图片铺满屏幕 */
+  z-index: -1;
+  position: absolute;
 }
 </style>

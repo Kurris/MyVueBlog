@@ -1,7 +1,7 @@
 <template>
   <div id="editor" class="editor">
     <el-page-header class="elheader" @back="goBack" content="博客编辑"></el-page-header>
-    <el-form class="editorForm" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px">
+    <el-form class="editorForm" :model="ruleForm" :rules="rules" ref="editorForm" label-width="100px">
       <el-form-item label="标题" prop="title">
         <el-input id="title" v-model="ruleForm.title"></el-input>
       </el-form-item>
@@ -13,8 +13,8 @@
       </el-form-item>
     </el-form>
     <div class="buttonEditor">
-      <el-button type="primary" @click="submitForm('ruleForm')">保存</el-button>
-      <el-button v-if="this.$route.query.type=='add'" @click="resetForm('ruleForm')">重置</el-button>
+      <el-button type="primary" @click="submitForm('editorForm')">保存</el-button>
+      <el-button v-if="this.$route.query.type=='add'" @click="resetForm('editorForm')">重置</el-button>
       <el-button v-if="this.$route.query.type=='edit'" @click="goBack">取消</el-button>
     </div>
   </div>
@@ -32,7 +32,7 @@ export default {
       rules: {
         title: [
           { required: true, message: '请输入博客标题', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
         ],
         introduction: [
           { required: true, message: '请输入博客简介', trigger: 'blur' },
@@ -160,9 +160,7 @@ export default {
     }
   },
   deactivated() {
-    this.ruleForm.title = ''
-    this.ruleForm.introduction = ''
-    this.ruleForm.mdcontent = ''
+    this.$refs['editorForm'].resetFields();
   },
 }
 </script>

@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export default function http(config) {
 	const instance = axios.create({
-		baseURL: config.baseURL == null || config.baseURL == '' ? 'http://47.116.143.51:5000/api/' : config.baseURL,
+		baseURL: config.baseURL == null || config.baseURL == '' ? 'http://localhost:5000/api/' : config.baseURL,
 		timeout: 30000,
 		withCredentials: true, //携带Cookie
 	})
