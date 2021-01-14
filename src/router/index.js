@@ -10,6 +10,8 @@ const blogEditor = () => import('../components/content/blog/blogEditor.vue')
 const blogHome = () => import('../views/bloghome.vue')
 const login = () => import('../views/login.vue')
 const notFound = () => import('../components/common/notfound.vue')
+const profile = () => import('../components/content/profile/profile.vue')
+const square = () => import('../components/content/square/square.vue')
 
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
@@ -40,6 +42,20 @@ const routes = [
 			title: '博客主页(*￣︶￣)',
 		},
 		children: [
+			{
+				path: 'Square',
+				component: square,
+				meta: {
+					title: '广场',
+				},
+			},
+			{
+				path: 'Profile',
+				component: profile,
+				meta: {
+					title: '个人信息',
+				},
+			},
 			{
 				path: 'Blog',
 				component: blog,

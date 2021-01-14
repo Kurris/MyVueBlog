@@ -3,8 +3,8 @@
     <div v-if="profile.name!=''">
       <el-avatar :size="150" :src="profile.avatarUrl"></el-avatar>
 
-      <div class="info" style="text-align: left">
-        <p class="name" style="font-size: 20px; font-weight: bold"> {{ profile.name }}</p>
+      <div class="info">
+        <p style="font-size: 20px; font-weight: bold"> {{ profile.name }}</p>
 
         <p v-if="profile.phone!=''" class="separated">phone: {{ profile.phone }}</p>
         <p v-if="profile.email!=''" class="separated">email: {{ profile.email }}</p>
@@ -47,24 +47,9 @@ export default {
 <style>
 #profile {
   position: absolute;
-  background-color: rgb(238, 241, 228);
   text-align: center;
-  left: 20px;
-  top: 155px;
   height: 765px;
   width: 350px;
   box-shadow: 0 0 20px -2px rgb(214, 230, 161);
-}
-.separated {
-  margin-top: 4px;
-  margin-bottom: 4px;
-}
-
-.name {
-  margin-bottom: 20px;
-}
-
-.info {
-  margin-top: 60px;
 }
 </style>

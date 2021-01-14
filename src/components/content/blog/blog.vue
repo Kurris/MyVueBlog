@@ -155,9 +155,10 @@ export default {
 }
 
 .pagination {
-  position: absolute;
+  position: relative;
   bottom: 0px;
   left: 20%;
+  width: 100px;
 }
 
 .timeline p,

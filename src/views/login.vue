@@ -137,7 +137,7 @@ export default {
           this.disBtn = false
 
           this.$http({
-            target: '#login',
+            target: '#app',
             method: 'post',
             url: '/User/Login',
             data: {
@@ -152,13 +152,8 @@ export default {
               localStorage.setItem("user_name", result.data.userName);
               localStorage.setItem("rememberpassword", this.loginForm.rememberPassword ? 1 : 0)
 
-              this.$message({
-                type: 'success',
-                message: '登录成功'
-              })
-
               //跳转到主页
-              this.$router.replace('/BlogHome/Blog')
+              this.$router.replace('/BlogHome')
 
             } else {
               this.$message({
@@ -224,7 +219,8 @@ export default {
     this.$http({ url: '/Bing/GetDayImage' })
       .then(res => {
         if (res.data != null) {
-          this.backgroundImg = res.data;
+          this.$store.state.backgroundImg = res.data
+          this.backgroundImg = res.data
         }
       })
   }
