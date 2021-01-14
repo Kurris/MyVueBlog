@@ -2,13 +2,16 @@
   <div id="login">
     <img :src="backgroundImg" class="img" alt="">
 
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-width="80px" class="login-box">
+    <el-form class="login-box" ref="loginForm" :model="loginForm" :rules="loginRules" label-width="80px">
       <h3 class="login-title">欢迎登录</h3>
       <el-form-item label="账号" prop="userName">
-        <el-input type="text" placeholder="请输入账号" v-model.lazy="loginForm.userName" clearable />
+        <el-input type="text" placeholder="请输入账号" v-model.lazy="loginForm.userName" :auto-complete="loginForm.autoComplete" autofocus clearable />
       </el-form-item>
       <el-form-item label="密码" prop="password">
-        <el-input type="password" placeholder="请输入密码" v-model.lazy="loginForm.password" @keyup.enter.native="login('loginForm')" clearable />
+        <el-input type="password" placeholder="请输入密码" v-model.lazy="loginForm.password" :auto-complete="loginForm.autoComplete" @keyup.enter.native="login('loginForm')" clearable />
+      </el-form-item>
+      <el-form-item>
+        <el-checkbox v-model="loginForm.rememberPassword">记住密码</el-checkbox>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="login('loginForm')" :disabled="!disBtn">登录</el-button>
@@ -20,13 +23,16 @@
     <el-dialog title="注册信息" :visible.sync="registerVisible" width="30%" :close-on-click-modal="false">
       <el-form ref="registerForm" :model="registerForm" :rules="registerRules" label-width="80px">
         <el-form-item label="账号" prop="userName">
-          <el-input type="text" placeholder="请输入账号名称" v-model.lazy="registerForm.userName" auto-complete="off" clearable />
+          <el-input type="text" placeholder="请输入账号名称" v-model.lazy="registerForm.userName" auto-complete="false" clearable />
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input type="password" placeholder="请输入密码" v-model.lazy="registerForm.password" auto-complete="off" clearable />
+          <el-input type="password" placeholder="请输入密码" v-model.lazy="registerForm.password" auto-complete="new-password" clearable />
+        </el-form-item>
+        <el-form-item label="重复密码" prop="secondPassword">
+          <el-input type="password" placeholder="请再次输入密码" v-model.lazy="registerForm.secondPassword" auto-complete="new-password" clearable />
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
-          <el-input type="email" placeholder="请输入邮箱" v-model.lazy="registerForm.email" auto-complete="off" />
+          <el-input type="email" placeholder="请输入邮箱" v-model.lazy="registerForm.email" auto-complete="false" />
         </el-form-item>
         <el-form-item label="手机" prop="phone">
           <el-input type="tel" placeholder="请输入手机号" v-model.lazy.number="registerForm.phone" />
@@ -77,6 +83,18 @@ export default {
         }
       }, 100)
     }
+    let checkPassword = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('重复密码不能为空'))
+      }
+      setTimeout(() => {
+        if (value === this.registerForm.password) {
+          callback()
+        } else {
+          callback(new Error('俩次密码不相同'))
+        }
+      }, 100)
+    }
 
     return {
       backgroundImg: '',
@@ -84,11 +102,14 @@ export default {
       disBtn: true,
       loginForm: {
         userName: '',
-        password: ''
+        password: '',
+        rememberPassword: false,
+        autoComplete: 'new-password'
       },
       registerForm: {
         userName: '',
         password: '',
+        secondPassword: '',
         email: '',
         phone: '',
       },
@@ -103,6 +124,7 @@ export default {
       registerRules: {
         userName: [{ required: true, message: '账号不可为空', trigger: 'blur' }],
         password: [{ required: true, message: '密码不可为空', trigger: 'blur' }],
+        secondPassword: [{ validator: checkPassword, required: true, trigger: 'blur' }],
         email: [{ validator: checkEmail, required: true, trigger: 'blur' }],
         phone: [{ validator: checkPhone, required: true, trigger: 'blur' }]
       }
@@ -126,8 +148,9 @@ export default {
 
             if (result.status == 1000) {
 
-              window.localStorage.setItem("user_access_token", result.data.token);
-              window.localStorage.setItem("user_name", result.data.userName);
+              localStorage.setItem("user_access_token", result.data.token);
+              localStorage.setItem("user_name", result.data.userName);
+              localStorage.setItem("rememberpassword", this.loginForm.rememberPassword ? 1 : 0)
 
               this.$message({
                 type: 'success',
@@ -135,7 +158,7 @@ export default {
               })
 
               //跳转到主页
-              this.$router.replace('/BlogHome')
+              this.$router.replace('/BlogHome/Blog')
 
             } else {
               this.$message({
@@ -182,7 +205,7 @@ export default {
     },
     forgetPwd() {
 
-    }
+    },
   },
   watch: {
     registerVisible(val) {
@@ -192,6 +215,12 @@ export default {
     }
   },
   created() {
+
+    if (localStorage.getItem("rememberpassword") == 1) {
+      this.loginForm.rememberPassword = true
+      this.loginForm.autoComplete = "on"
+    }
+
     this.$http({ url: '/Bing/GetDayImage' })
       .then(res => {
         if (res.data != null) {
