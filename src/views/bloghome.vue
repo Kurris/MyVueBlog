@@ -5,29 +5,29 @@
       <el-container>
 
         <el-aside width="auto">
-          <el-menu :default-active="this.$route.path" class="el-menu" :collapse="true" :router="true" @select="handleSelect">
+          <el-menu :default-active="currentPath" :collapse="true" router @select="handleSelect">
             <el-menu-item index="/BlogHome/Square">
               <i class="el-icon-s-promotion"></i>
               <span slot="title">广场</span>
             </el-menu-item>
-            <el-menu-item index="3" disabled>
-              <i class="el-icon-document"></i>
-              <span slot="title">导航三</span>
-            </el-menu-item>
             <el-menu-item index="/BlogHome/Profile" class="profile">
-              <i class="el-icon-user"></i>
-              <span slot="title">个人资料</span>
+              <i class="el-icon-user"> </i>
+              <span slot="title">我的博客</span>
+            </el-menu-item>
+
+            <el-menu-item index="/BlogHome/Backend" style="bottom:56px;position:absolute;width:100%;">
+              <i class="el-icon-s-grid"></i>
+              <span slot="title">后台</span>
             </el-menu-item>
           </el-menu>
         </el-aside>
 
         <el-container>
           <el-main>
-            <img :src="img" alt="" style="z-index:-9; position: absolute;">
             <el-backtop :right="360" :bottom="100">
             </el-backtop>
 
-            <keep-alive>
+            <keep-alive exclude="profile">
               <router-view />
             </keep-alive>
 
@@ -48,9 +48,8 @@
 export default {
   data() {
     return {
-      img: this.$store.state.backgroundImg,
       isCollapse: true,
-      currentPath: '/BlogHome/Square'
+      currentPath: '/BlogHome/Backend'
     }
   },
   methods: {
@@ -74,14 +73,10 @@ export default {
   min-height: 765px;
   top: 155px;
   margin-left: 400px;
-  box-shadow: 0 0 20px -2px rgb(224, 241, 165);
+  box-shadow: 0 0 20px -2px rgb(220, 235, 240);
 }
 .el-menu {
   height: 100%;
-}
-
-.el-aside {
-  background-color: red;
 }
 
 .profile {
@@ -96,6 +91,6 @@ export default {
 }
 
 .el-footer {
-  background-color: rosybrown;
+  background-color: rgb(220, 235, 240);
 }
 </style>

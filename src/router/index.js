@@ -3,8 +3,8 @@ import VueRouter from 'vue-router'
 
 vue.use(VueRouter)
 
-const introduction = () => import('../components/content/profile/introduction.vue')
 const blog = () => import('../components/content/blog/blog.vue')
+const introduction = () => import('../components/content/profile/introduction.vue')
 const blogDetail = () => import('../components/content/blog/blogDetail.vue')
 const blogEditor = () => import('../components/content/blog/blogEditor.vue')
 const blogHome = () => import('../views/bloghome.vue')
@@ -12,6 +12,7 @@ const login = () => import('../views/login.vue')
 const notFound = () => import('../components/common/notfound.vue')
 const profile = () => import('../components/content/profile/profile.vue')
 const square = () => import('../components/content/square/square.vue')
+const backend = () => import('../views/backend.vue')
 
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
@@ -57,6 +58,13 @@ const routes = [
 				},
 			},
 			{
+				path: 'Backend',
+				component: backend,
+				meta: {
+					title: '后台管理',
+				},
+			},
+			{
 				path: 'Blog',
 				component: blog,
 				meta: {
@@ -98,7 +106,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-	document.title = to.matched[0].meta.title
+	document.title = to.matched[to.matched.length - 1].meta.title
 	next()
 })
 

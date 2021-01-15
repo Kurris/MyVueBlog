@@ -30,13 +30,7 @@ export default function http(config) {
 		},
 		error => {
 			this.$store.state.loading.close()
-			let msg = error.message == 'Network Error' ? '无法连接到服务器' : error.message
-
-			this.$message({
-				message: msg,
-				type: 'error',
-				duration: 5000,
-			})
+			if (error.message == 'Network Error') this.$router.push('/notfound')
 			return Promise.reject(error)
 		}
 	)

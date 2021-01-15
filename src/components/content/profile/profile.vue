@@ -1,24 +1,28 @@
 <template>
   <div id="profile">
-    <div v-if="profile.name!=''">
-      <el-avatar :size="150" :src="profile.avatarUrl"></el-avatar>
+    <el-card>
+      <div v-if="profile.name!=''">
+        <el-avatar :size="250" style="margin-top:10px;" :src="profile.avatarUrl"></el-avatar>
 
-      <div class="info">
-        <p style="font-size: 20px; font-weight: bold"> {{ profile.name }}</p>
+        <div class="personalInfo">
+          <p style="font-size: 30px; font-weight: bold ; margin-bottom:40px;text-align:left"> {{ profile.name }}</p>
 
-        <p v-if="profile.phone!=''" class="separated">phone: {{ profile.phone }}</p>
-        <p v-if="profile.email!=''" class="separated">email: {{ profile.email }}</p>
-        <span v-if="profile.githubUrl!=''">Github:</span>
-        <el-link v-if="profile.githubUrl!=''" class=" separated" :href="profile.githubUrl" target="_blank" type="primary">{{ profile.githubUrl }}</el-link>
+          <el-button style="margin-bottom:20px">编辑</el-button>
+
+          <p v-if="profile.phone!=''" class="separated">phone: {{ profile.phone }}</p>
+          <p v-if="profile.email!=''" class="separated">email: {{ profile.email }}</p>
+          <span v-if="profile.githubUrl!=''">Github:</span>
+          <el-link v-if="profile.githubUrl!=''" class=" separated" :href="profile.githubUrl" target="_blank" type="primary">{{ profile.githubUrl }}</el-link>
+        </div>
       </div>
-    </div>
-
+    </el-card>
   </div>
 
 </template>
 
 <script>
 export default {
+  name: 'profile',
   data() {
     return {
       profile: {
@@ -48,8 +52,17 @@ export default {
 #profile {
   position: absolute;
   text-align: center;
-  height: 765px;
   width: 350px;
-  box-shadow: 0 0 20px -2px rgb(214, 230, 161);
+}
+
+.el-card {
+  border-radius: 10px;
+}
+.el-button {
+  width: 200px;
+}
+
+.personalInfo {
+  text-align: center;
 }
 </style>

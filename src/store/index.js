@@ -9,7 +9,6 @@ const store = new vuex.Store({
 		userName: '',
 		blog: {},
 		loading: loading,
-		backgroundImg: '',
 	},
 	mutations: {},
 	actions: {},

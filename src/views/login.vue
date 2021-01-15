@@ -161,6 +161,7 @@ export default {
                 message: result.message
               })
             }
+
           }).catch(err => {
             window.localStorage.setItem("user_access_token", '');
             window.localStorage.setItem("user_name", '');
