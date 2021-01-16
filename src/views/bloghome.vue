@@ -24,9 +24,7 @@
 
         <el-container>
           <el-main>
-            <el-backtop :right="360" :bottom="100">
-            </el-backtop>
-
+            <el-backtop :right="360" :bottom="100"></el-backtop>
             <keep-alive exclude="profile">
               <router-view />
             </keep-alive>
@@ -79,18 +77,8 @@ export default {
   height: 100%;
 }
 
-.profile {
-  position: absolute;
-  width: 100%;
-  bottom: 0px;
-}
-
 #bloghome,
 .el-container {
   height: 100%;
-}
-
-.el-footer {
-  background-color: rgb(220, 235, 240);
 }
 </style>
