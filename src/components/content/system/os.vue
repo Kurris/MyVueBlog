@@ -6,10 +6,10 @@
       </div>
 
       <el-table :data="osData" style="width:100%" :show-header="false">
-        <el-table-column prop="a"></el-table-column>
-        <el-table-column prop="b"></el-table-column>
-        <el-table-column prop="c"></el-table-column>
-        <el-table-column prop="d"></el-table-column>
+        <el-table-column prop="a" width="200"></el-table-column>
+        <el-table-column prop="b" width="200"></el-table-column>
+        <el-table-column prop="c" width="200"></el-table-column>
+        <el-table-column prop="d" width="200"></el-table-column>
       </el-table>
 
     </el-card>

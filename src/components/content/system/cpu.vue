@@ -18,14 +18,37 @@
 
 <script>
 
+import * as signalR from '@microsoft/signalr'
 
 
 export default {
   data() {
     return {
-      cpuData: [{ key: '核心', value: '1' }, { key: '使用量', value: '20%' }]
+      connection: null,
+      cpuData: [{ key: '核心', value: '1' }, { key: '使用量', value: '' }]
     }
-  }
+  },
+  mounted() {
+
+    this.connection = new signalR.HubConnectionBuilder()
+      .withUrl('http://localhost:5000/chat',
+        {
+          accessTokenFactory: () => localStorage.getItem('user_access_token')
+        })
+      .build();
+
+    this.connection.on('setCpuValue', x => {
+      this.cpuData[1].value = x
+    })
+
+    this.connection.start().then((result) => {
+      this.connection.invoke('GetCpuValue');
+    }).catch((err) => {
+
+    });
+
+
+  },
 }
 </script>
 

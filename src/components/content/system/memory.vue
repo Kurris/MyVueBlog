@@ -16,11 +16,31 @@
 
 <script>
 
+import * as signalR from '@microsoft/signalr'
+
 export default {
   data() {
     return {
+      connection: null,
       memoryData: [{ key: '内存总量', value: '16' }, { key: '使用量', value: '2' }]
     }
+  },
+  mounted() {
+    this.connection = new signalR.HubConnectionBuilder()
+      .withUrl('http://localhost:5000/chat',
+        {
+          accessTokenFactory: () => localStorage.getItem('user_access_token')
+        })
+      .build();
+
+    this.connection.on('setMemoryValue', x => {
+      this.memoryData[1].value = x
+    });
+
+    this.connection.start().then(res => {
+      this.connection.invoke('GetMemoryValue')
+    })
+
   },
 }
 </script>
