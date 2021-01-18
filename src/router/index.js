@@ -12,7 +12,7 @@ const login = () => import('../views/login.vue')
 const notFound = () => import('../components/common/notfound.vue')
 const profile = () => import('../components/content/profile/profile.vue')
 const square = () => import('../components/content/square/square.vue')
-const backend = () => import('../views/backend.vue')
+const backend = () => import('../components/content/backend/backend.vue')
 
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {

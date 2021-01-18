@@ -25,7 +25,7 @@
         <el-container>
           <el-main>
             <el-backtop :right="360" :bottom="100"></el-backtop>
-            <keep-alive exclude="profile">
+            <keep-alive exclude="profile,backend">
               <router-view />
             </keep-alive>
 
@@ -47,7 +47,7 @@ export default {
   data() {
     return {
       isCollapse: true,
-      currentPath: '/BlogHome/Backend'
+      currentPath: '/BlogHome/Square'
     }
   },
   methods: {

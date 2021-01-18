@@ -10,7 +10,7 @@
 
         <el-table-column fixed="right" label="操作" width="100">
           <template slot-scope="scope">
-            <el-button type="text" @click="deleteRow(scope.row)" size="small">删除 </el-button>
+            <el-button type="danger" @click="deleteRow(scope.row)" size="mini">删除 </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -29,7 +29,7 @@ export default {
       user: [],
       pagination: {
         pageIndex: 1,
-        pageSize: 1,
+        pageSize: 2,
         total: 0,
       },
     }
@@ -57,9 +57,9 @@ export default {
       })
     }
   },
-  activated() {
+  mounted() {
     this.refresh(this.pagination.pageSize, this.pagination.pageIndex)
-  }
+  },
 }
 </script>
 
